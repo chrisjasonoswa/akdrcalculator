@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Website</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="container">
+        <img id="robot" src="krobot.webp" alt="robot" style="width: 150px; height: auto;">
+
+        <div id="container-header">
+            <img src="logo.jpg" alt="Logo" class="logo">
+            <h1 class="header-title">Point to AKDR Ratio</h1>
+        </div>
+
+        <label for="date-select" class="select-label">Choose a date:</label>
+        <select name="date" id="date-select">
+        </select>
+
+        <div class="field total-display">
+            <span><b>Total Qualified Points</b></span>
+            <span id="total-value"><div class="loader"></div></span>
+        </div>
+        <div class="field">
+            <span><b>Lowest Qualified Rank</b></span>
+            <span id="lowest-rank"><div class="loader"></div></span>
+        </div>
+        <div class="field">
+            <span><b>Monthly Reward($AKDR)</b></span>
+            <span id="monthly-reward"><div class="loader"></div></span>
+        </div>
+        <div class="field">
+            <span><b>Point to AKDR Ratio</b></span>
+            <span id="point-akdr"><div class="loader"></div></span>
+        </div>
+
+        <div class="space-between-div">
+            <label for="points-input">Points:</label>
+            <input type="number" id="points-input" name="points-input">
+        </div>
+
+        <div class="space-between-div">
+            <span><b>Estimated $AKDR:</b></span>
+            <span id="estimated-akdr">10000</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
