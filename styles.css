@@ -127,3 +127,11 @@ input[type="number"]:focus {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
   }
+
+.badges .green {
+    background-color: rgba(34, 197, 94, 0.10);
+    color: rgb(34 197 94);
+    border: 1px rgb(34 197 94) solid;
+    border-radius: 20px;
+    cursor: pointer;
+}

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Website</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <div id="container">
@@ -14,6 +15,13 @@
             <img src="logo.jpg" alt="Logo" class="logo">
             <h1 class="header-title">Points-AKDR Calculator</h1>
         </div>
+        <div class="badges">
+            <span style="color: #797979; font-size: 0.9em;"> Latest Data as of &nbsp;</span>
+            <button id="refresh-button" class="green" style="flex: 1; flex-direction: row; align-items: center;">
+                <div class="loader"></div>
+            </button>
+        </div>
+        
 
         <label for="date-select" class="select-label">Choose a date:</label>
         <select name="date" id="date-select">
