@@ -10,11 +10,6 @@ const estimatedAkdr = document.getElementById("estimated-akdr");
 const monthlyRewardValue = 1100000;
 let pointsMultiplier = 0;
 
-
-// document.getElementById("date-select").addEventListener("change", () => {
-//     fetchLeaderboardData(selectElement.value);
-// });
-
 document.addEventListener("DOMContentLoaded", () => {
     const leaderboardDates = 'https://corsproxy.io/?' + encodeURIComponent('https://kaidro.com/api/leaderboard');
     fetch(leaderboardDates)
@@ -44,32 +39,32 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     })
     .catch(error => console.error("Error fetching leaderboard dates:", error));
-
-    console.log("selectDate.value:", selectElement.value);
-
-    // Event listener to fetch data whenever the selected date changes
-    selectElement.addEventListener("change", () => {
-
-        //Reset values
-        const withLoaderElements = document.getElementsByClassName("with-loader");
-        for (let i = 0; i < withLoaderElements.length; i++) {
-            withLoaderElements[i].innerHTML = '<div class="loader"></div>';
-        }
-
-        pointsInput.value = undefined;
-        estimatedAkdr.innerText = "-";
-
-        fetchLeaderboardData(selectElement.value);
-    });
-
-    pointsInput.addEventListener("input", function() {
-
-        //AKDR
-        const pointsInputValue = this.value;
-        estimatedAkdr.innerText = (pointsMultiplier*pointsInputValue).toFixed(2)
-    });
-
 });
+
+// Event listener to fetch data whenever the selected date changes
+selectElement.addEventListener("change", () => {
+
+    //Reset values
+    const withLoaderElements = document.getElementsByClassName("with-loader");
+    for (let i = 0; i < withLoaderElements.length; i++) {
+        withLoaderElements[i].innerHTML = '<div class="loader"></div>';
+    }
+
+    pointsInput.value = undefined;
+    estimatedAkdr.innerText = "-";
+
+    fetchLeaderboardData(selectElement.value);
+});
+
+pointsInput.addEventListener("input", function() {
+    calculcatedAkdr();
+});
+
+//Function to calculate Estimated AKDR
+function calculcatedAkdr(){
+    if(pointsInput.value)
+        estimatedAkdr.innerText = (pointsMultiplier*pointsInput.value).toFixed(2)
+}
 
 // Function to fetch leaderboard data based on selected date
 function fetchLeaderboardData(selectedValue) {
@@ -100,6 +95,9 @@ function fetchLeaderboardData(selectedValue) {
             
             pointsMultiplier = (monthlyRewardValue / totalPoints).toPrecision(5);
             document.getElementById("point-akdr").innerText = pointsMultiplier;
+
+            //Calculate AKDR rewards
+            calculcatedAkdr();
         })
         .catch(error => {
             console.error("Error fetching data:", error);
@@ -107,3 +105,5 @@ function fetchLeaderboardData(selectedValue) {
         });
 }
 
+// Set the interval to 5000 milliseconds (5 seconds)
+setInterval(() => fetchLeaderboardData(selectElement.value), 5000);
