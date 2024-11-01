@@ -11,7 +11,7 @@ const refreshButton = document.getElementById("refresh-button");
 const refreshButtonContent = document.getElementById("refresh-button-content");
 
 const monthlyRewardValue = 1100000;
-let pointsMultiplier = 0;
+let pointsMultiplier = undefined;
 
 document.addEventListener("DOMContentLoaded", () => {
     const leaderboardDates = 'https://corsproxy.io/?' + encodeURIComponent('https://kaidro.com/api/leaderboard');
@@ -34,8 +34,6 @@ document.addEventListener("DOMContentLoaded", () => {
             option.textContent = `${monthName} ${year}`; // Set the display text
             
             selectElement.appendChild(option);
-
-            
         });
 
         selectElement.selectedIndex = 0;
@@ -48,8 +46,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Event listener to fetch data whenever the selected date changes
-selectElement.addEventListener("change", () => {    
-    console.log("changed");
+selectElement.addEventListener("change", () => {
+    //Reset pointsMultipler
+    pointsMultiplier = undefined;
+
+    //Empty out the estimated akdr
+    estimatedAkdr.innerText = '-';
+
     //Fetch Leaderboard data
     fetchLeaderboardData();
 
@@ -68,13 +71,17 @@ pointsInput.addEventListener("input", function() {
 //When refresh button is clicked, fetch new leaderboard data
 refreshButton.addEventListener("click", function(){
     console.log("Refresh button clicked, fetching new Leaderboard data");
+
+    //Reset pointsMultipler
+    pointsMultiplier = undefined;
+
     fetchLeaderboardData();
 });
 
 
 //Function to calculate Estimated AKDR
 function calculcatedAkdr(){
-    if(pointsInput.value)
+    if(pointsInput.value && pointsMultiplier)
         estimatedAkdr.innerText = (pointsMultiplier*pointsInput.value).toFixed(4);
     else
         estimatedAkdr.innerText = "-";
@@ -83,12 +90,14 @@ function calculcatedAkdr(){
 
 // Function to fetch leaderboard data based on selected date
 function fetchLeaderboardData() {
+    setLoadingValues();
     console.log("Fetching leaderboard data for:" + selectElement.value);
     const pointsUrl = 'https://corsproxy.io/?' + encodeURIComponent(`https://kaidro.com/api/leaderboard/${selectElement.value}?limit=3000`);
 
     fetch(pointsUrl)
         .then(response => response.json())
         .then(data => {
+            // unsetLoadingValues();
             let totalPoints = 0;
             let lowestRank = 0;
 
@@ -101,16 +110,16 @@ function fetchLeaderboardData() {
             });
 
             // Display the total points
-            totalDisplay.innerText = totalPoints.toLocaleString();
+            totalDisplay.innerHTML = totalPoints.toLocaleString();
 
             // Display lowest rank
-            lowestQualifiedRank.innerText = "#" + lowestRank;
+            lowestQualifiedRank.innerHTML = "#" + lowestRank;
 
             // Monthly Reward and Point to AKDR Ratio
-            monthlyReward.innerText = monthlyRewardValue.toLocaleString();
+            monthlyReward.innerHTML = monthlyRewardValue.toLocaleString();
             
             pointsMultiplier = (monthlyRewardValue / totalPoints).toFixed(4);
-            pointAkdr.innerText = pointsMultiplier;
+            pointAkdr.innerHTML = pointsMultiplier;
 
             //Calculate AKDR rewards
             calculcatedAkdr();
@@ -131,3 +140,15 @@ function fetchLeaderboardData() {
             // alert("An error occured in the server");
         });
 }
+
+
+function setLoadingValues(){
+    const loaders = document.getElementsByClassName("with-loader");
+    for (const element of loaders) {
+        element.innerHTML = '<div class="loader"></div>';
+    }
+
+    //Set estimated Akdr to empty
+    estimatedAkdr.innerText = '-';
+}
+
