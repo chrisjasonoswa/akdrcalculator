@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 // Display the total points
-                document.getElementById("total-value").innerText = totalPoints;
+                document.getElementById("total-value").innerText = totalPoints.toLocaleString();
 
                 // Display lowest rank
                 document.getElementById("lowest-rank").innerText = "#" + lowestRank;
