@@ -4,6 +4,7 @@ const totalDisplay = document.getElementById("total-value");
 const lowestQualifiedRank = document.getElementById("lowest-rank");
 const monthlyReward = document.getElementById("monthly-reward");
 const pointAkdr = document.getElementById("point-akdr")
+const pointsInput = document.getElementById("points-input")
 const estimatedAkdr = document.getElementById("estimated-akdr");
 
 const monthlyRewardValue = 1100000;
@@ -45,52 +46,64 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(error => console.error("Error fetching leaderboard dates:", error));
 
     console.log("selectDate.value:", selectElement.value);
-    
-     // Function to fetch leaderboard data based on selected date
-     function fetchLeaderboardData(selectedValue) {
-        const pointsUrl = 'https://corsproxy.io/?' + encodeURIComponent(`https://kaidro.com/api/leaderboard/${selectedValue}?limit=3000`);
-
-        fetch(pointsUrl)
-            .then(response => response.json())
-            .then(data => {
-                let totalPoints = 0;
-                let lowestRank = 0;
-
-                // Calculate total points from leaderboard entries
-                data.leaderboard.forEach(entry => {
-                    if (entry.points >= 200) {
-                        totalPoints += entry.points;
-                        lowestRank += 1;
-                    }
-                });
-
-                // Display the total points
-                document.getElementById("total-value").innerText = totalPoints.toLocaleString();
-
-                // Display lowest rank
-                document.getElementById("lowest-rank").innerText = "#" + lowestRank;
-
-                // Monthly Reward and Point to AKDR Ratio
-                document.getElementById("monthly-reward").innerText = monthlyRewardValue.toLocaleString();
-                
-                pointsMultiplier = (monthlyRewardValue / totalPoints).toPrecision(5);
-                document.getElementById("point-akdr").innerText = pointsMultiplier;
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-                document.getElementById("total-value").innerText = "Error";
-            });
-    }
 
     // Event listener to fetch data whenever the selected date changes
     selectElement.addEventListener("change", () => {
+
+        //Reset values
+        const withLoaderElements = document.getElementsByClassName("with-loader");
+        for (let i = 0; i < withLoaderElements.length; i++) {
+            withLoaderElements[i].innerHTML = '<div class="loader"></div>';
+        }
+
+        pointsInput.value = undefined;
+        estimatedAkdr.innerText = "-";
+
         fetchLeaderboardData(selectElement.value);
     });
+
+    pointsInput.addEventListener("input", function() {
+
+        //AKDR
+        const pointsInputValue = this.value;
+        estimatedAkdr.innerText = (pointsMultiplier*pointsInputValue).toFixed(2)
+    });
+
 });
 
-document.getElementById("points-input").addEventListener("input", function() {
-    const pointsInputValue = this.value;
-    //AKDR
-    estimatedAkdr.innerText = (pointsMultiplier*pointsInputValue).toFixed(2)
-});
+// Function to fetch leaderboard data based on selected date
+function fetchLeaderboardData(selectedValue) {
+    const pointsUrl = 'https://corsproxy.io/?' + encodeURIComponent(`https://kaidro.com/api/leaderboard/${selectedValue}?limit=3000`);
+
+    fetch(pointsUrl)
+        .then(response => response.json())
+        .then(data => {
+            let totalPoints = 0;
+            let lowestRank = 0;
+
+            // Calculate total points from leaderboard entries
+            data.leaderboard.forEach(entry => {
+                if (entry.points >= 200) {
+                    totalPoints += entry.points;
+                    lowestRank += 1;
+                }
+            });
+
+            // Display the total points
+            document.getElementById("total-value").innerText = totalPoints.toLocaleString();
+
+            // Display lowest rank
+            document.getElementById("lowest-rank").innerText = "#" + lowestRank;
+
+            // Monthly Reward and Point to AKDR Ratio
+            document.getElementById("monthly-reward").innerText = monthlyRewardValue.toLocaleString();
+            
+            pointsMultiplier = (monthlyRewardValue / totalPoints).toPrecision(5);
+            document.getElementById("point-akdr").innerText = pointsMultiplier;
+        })
+        .catch(error => {
+            console.error("Error fetching data:", error);
+            document.getElementById("total-value").innerText = "Error";
+        });
+}
 
