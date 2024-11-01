@@ -6,11 +6,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f0f4f8;
-    
+    padding-top: 80px;
+    min-height: 100vh;
 }
 
 .container {
@@ -23,7 +23,6 @@ body {
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
-
     max-width: 400px;
     width: 100%;
 }
