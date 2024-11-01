@@ -75,7 +75,9 @@ refreshButton.addEventListener("click", function(){
 //Function to calculate Estimated AKDR
 function calculcatedAkdr(){
     if(pointsInput.value)
-        estimatedAkdr.innerText = (pointsMultiplier*pointsInput.value).toFixed(4)
+        estimatedAkdr.innerText = (pointsMultiplier*pointsInput.value).toFixed(4);
+    else
+        estimatedAkdr.innerText = "-";
 }
 
 
