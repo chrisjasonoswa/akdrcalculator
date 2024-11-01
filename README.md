@@ -1,0 +1,1 @@
+# kaidro_akdr_calculator
