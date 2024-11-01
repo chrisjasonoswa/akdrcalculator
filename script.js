@@ -10,15 +10,35 @@ const estimatedAkdr = document.getElementById("estimated-akdr");
 const refreshButton = document.getElementById("refresh-button");
 const refreshButtonContent = document.getElementById("refresh-button-content");
 
+const addressInput = document.getElementById("address-input");
+const addressPoints = document.getElementById("address-points");
+const addressAkdr = document.getElementById("address-akdr");
+
+const editAddrButton = document.getElementById("edit-addr-button");
+let inputEditDisabled = true;
+
 const monthlyRewardValue = 1100000;
 let pointsMultiplier = undefined;
 
+const invalidAddress = 'Address Empty/Not Found';
+
+// localStorage.setItem("roninAddress", "0xc4a685d7080fa4783c1babb45b02908fded4e03c");
+
 document.addEventListener("DOMContentLoaded", () => {
+    //Check if there is a saved ronin address
+    let address = localStorage.getItem("roninAddress");
+    if(address == null){
+        addressPoints.innerText = "-";
+    }
+    else{
+        addressInput.value = address;
+    }
+
+    //Fetch leaderboard dates and points
     const leaderboardDates = 'https://corsproxy.io/?' + encodeURIComponent('https://kaidro.com/api/leaderboard');
     fetch(leaderboardDates)
     .then(response => response.json())
     .then(data => {
-        
         data.leaderboardKeys.forEach(key => {
             const [prefix, monthYear] = key.split("-");
             const month = parseInt(monthYear.slice(0, 2), 10); // Extracts the month number
@@ -47,17 +67,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Event listener to fetch data whenever the selected date changes
 selectElement.addEventListener("change", () => {
-    //Reset pointsMultipler
-    pointsMultiplier = undefined;
-
-    //Empty out the estimated akdr
-    estimatedAkdr.innerText = '-';
-
-    //Fetch Leaderboard data
+    resetValues();
     fetchLeaderboardData();
+});
 
-    //Recalculate akdr
-    calculcatedAkdr();
+//When refresh button is clicked, fetch new leaderboard data
+refreshButton.addEventListener("click", function(){
+    resetValues();
+    fetchLeaderboardData();
 });
 
 
@@ -67,16 +84,21 @@ pointsInput.addEventListener("input", function() {
     calculcatedAkdr();
 });
 
-
-//When refresh button is clicked, fetch new leaderboard data
-refreshButton.addEventListener("click", function(){
-    console.log("Refresh button clicked, fetching new Leaderboard data");
-
-    //Reset pointsMultipler
-    pointsMultiplier = undefined;
-
-    fetchLeaderboardData();
-});
+editAddrButton.addEventListener("click", () => {
+    //Edit mode
+    if(inputEditDisabled){
+        addressInput.disabled = false;
+        editAddrButton.className = "fa-solid fa-floppy-disk";
+    }
+    //Save mode
+    else{
+        addressInput.disabled = true;
+        editAddrButton.className = "fa-solid fa-pen-to-square";
+        localStorage.setItem("roninAddress", addressInput.value);
+        fetchLeaderboardData();
+    }
+    inputEditDisabled = !inputEditDisabled;
+})
 
 
 //Function to calculate Estimated AKDR
@@ -87,27 +109,49 @@ function calculcatedAkdr(){
         estimatedAkdr.innerText = "-";
 }
 
+//Function to calculate Estimated AKDR for the ronin address
+function calculcateAddressAkdr(){
+    if(addressPoints.innerText !=  "-" && pointsMultiplier)
+        addressAkdr.innerText = (pointsMultiplier*addressPoints.innerText).toFixed(4);
+    else
+        estimatedAkdr.innerText = "-";
+}
 
 // Function to fetch leaderboard data based on selected date
 function fetchLeaderboardData() {
-    setLoadingValues();
+    resetValues();
     console.log("Fetching leaderboard data for:" + selectElement.value);
     const pointsUrl = 'https://corsproxy.io/?' + encodeURIComponent(`https://kaidro.com/api/leaderboard/${selectElement.value}?limit=3000`);
 
     fetch(pointsUrl)
         .then(response => response.json())
         .then(data => {
-            // unsetLoadingValues();
+
             let totalPoints = 0;
             let lowestRank = 0;
-
+            let addressFound = false;
             // Calculate total points from leaderboard entries
             data.leaderboard.forEach(entry => {
                 if (entry.points >= 200) {
                     totalPoints += entry.points;
                     lowestRank += 1;
                 }
+                
+                //Get address and set points
+                let address = localStorage.getItem("roninAddress");
+                if (address && entry.walletAddress == address){
+                    addressFound = true;
+                    addressPoints.innerText = entry.points
+
+                    const invalidAddressDiv = document.getElementById("invalid-address-info");
+                    invalidAddressDiv.style = "display: none";
+                }
             });
+
+            if(!addressFound){
+                const invalidAddressDiv = document.getElementById("invalid-address-info");
+                invalidAddressDiv.style = "display: block";
+            }
 
             // Display the total points
             totalDisplay.innerHTML = totalPoints.toLocaleString();
@@ -124,6 +168,9 @@ function fetchLeaderboardData() {
             //Calculate AKDR rewards
             calculcatedAkdr();
 
+            //Calculate AKDR for the address
+            calculcateAddressAkdr();
+
             //Update the latest date
             const newDate = new Date().toLocaleString('en-US', {
                 month: 'short',    // Display month as "Jan", "Feb", etc.
@@ -133,7 +180,8 @@ function fetchLeaderboardData() {
                 minute: 'numeric', // Display minute.
                 timeZoneName: 'short' // Display timezone as "PST", "EST", etc.
             });
-            refreshButton.innerHTML = `<span>${newDate}&nbsp;&nbsp;&nbsp;<i class="fa fa-refresh" style="font-size:1em; color:black;"></i></span>`;
+            
+            refreshButton.innerHTML = `<span>${newDate}&nbsp;&nbsp;&nbsp;<i class="fa-solid fa-rotate style="font-size:1em; color:black;"></i>`;
         })
         .catch(error => {
             console.error("Error fetching data:", error);
@@ -142,13 +190,20 @@ function fetchLeaderboardData() {
 }
 
 
-function setLoadingValues(){
+function resetValues(){
     const loaders = document.getElementsByClassName("with-loader");
     for (const element of loaders) {
         element.innerHTML = '<div class="loader"></div>';
     }
 
-    //Set estimated Akdr to empty
+    //Reset pointsMultipler
+    pointsMultiplier = undefined;
+
+    //Empty out the estimated akdr
     estimatedAkdr.innerText = '-';
+
+    //Reset address points and estimated akdr
+    addressPoints.innerText = '-';
+    addressAkdr.innerText = '-';
 }
 

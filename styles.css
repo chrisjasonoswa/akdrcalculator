@@ -9,14 +9,13 @@ body {
     height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
-    background-color: rgb(240, 240, 240);
+    background-color: #f0f4f8;
+    
 }
 
-#container {
-    /* border-image: linear-gradient(to right, #3acfd5 0%, #3a4ed5 100%) 1; */
-    border-style: solid;
-    border-width: 1px;
-    /* border-color: black; */
+.container {
+    /* border-style: solid; */
+    /* border-width: 1px; */
     position: relative;
     padding: 40px 30px;
     padding-top: 60px;
@@ -24,6 +23,9 @@ body {
     border-radius: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
+
+    max-width: 400px;
+    width: 100%;
 }
 
 #robot {
@@ -93,14 +95,14 @@ select {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 15px 0;
+    margin: 10px 0;
 }
 
 label {
     font-weight: bold;
 }
 
-input[type="number"] {
+.custom-input{
     padding: 8px;
     /* width: 100px; */
     border: 1px solid #ddd;
@@ -108,7 +110,7 @@ input[type="number"] {
     font-size: 0.9em;
 }
 
-input[type="number"]:focus {
+.custom-input:focus {
     outline: none;
     border-color: #aaa;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
@@ -134,4 +136,32 @@ input[type="number"]:focus {
     border: 1px rgb(34 197 94) solid;
     border-radius: 20px;
     cursor: pointer;
+}
+
+.badges .green:hover{
+    background-color: rgb(34 197 94);
+    color: white;
+}
+.badges .red {
+    background-color: rgb(255, 207, 207);
+    color: rgb(239, 68, 68);
+    border: 1px solid rgb(239, 68, 68);
+    border-radius: 5px;
+}
+
+#address-div {
+    background-color: black;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+#address-input {
+    width: 100%;
+    margin-right: 10px;
+}
+#address-input:disabled {
+    color: white;
 }

@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Points-AKDR Calculator</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <div id="container">
+    <div class="container" style="margin-bottom: 20px;">
         <img id="robot" src="krobot.webp" alt="robot" style="width: 150px; height: auto;">
 
         <div id="container-header">
-            <img src="logo.jpg" alt="Logo" class="logo">
+            <img src="logo.jpg" alt="Logo" class="logo" style="border-radius: 10px;">
             <h1 class="header-title">Points-AKDR Calculator</h1>
         </div>
         <div class="badges">
@@ -46,15 +45,42 @@
 
         <div class="space-between-div">
             <label for="points-input">Points:</label>
-            <input type="number" id="points-input" name="points-input">
+            <input type="number" id="points-input" class="custom-input" name="points-input" style="text-align: right;">
         </div>
 
         <div class="space-between-div">
             <span><b>Estimated $AKDR:</b></span>
             <span id="estimated-akdr">-</span>
         </div>
+
+
+
+        <div id="address-div">
+            <div class="space-between-div">
+                <input type="text" id="address-input" class="custom-input" name="points-input" placeholder="Input Ronin Address" disabled>
+                <i id="edit-addr-button" class="fa-solid fa-pen-to-square" style="font-size:1.5em; color:white;"></i></span>
+            </div>
+
+            <div id="invalid-address-info"class="badges" style="display: none;">
+                <div class="red" style="font-size: 0.9em; padding: 5px">
+                    Address Empty/Not Found in Current Date</span>
+                </div>
+            </div>
+
+            <div class="space-between-div">
+                <span><b>Points:</b></span>
+                <span id="address-points">-</span>
+            </div>
+    
+            <div class="space-between-div">
+                <span><b>Estimated $AKDR:</b></span>
+                <span id="address-akdr">-</span>
+            </div>
+        </div>
+
     </div>
 
     <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/c592d3fa2a.js" crossorigin="anonymous"></script>
 </body>
 </html>
