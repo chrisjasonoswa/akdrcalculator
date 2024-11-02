@@ -62,7 +62,7 @@ body {
     font-weight: bold;
 }
 
-select {
+#date-select {
     width: 100%;
     padding: 8px;
     margin-bottom: 20px;
@@ -70,7 +70,23 @@ select {
     border: 1px solid #ddd;
     background-color: #f9f9f9;
     font-size: 0.9em;
+    color: black;
 }
+
+#date-select:focus {
+    outline: none; /* Remove default focus outline */
+    box-shadow: 0 0 3px black; /* Optional: Custom focus style */
+}
+
+/* select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    font-size: 0.9em;
+} */
 
 .field {
     display: flex;
@@ -142,9 +158,9 @@ label {
     color: white;
 }
 .badges .red {
-    background-color: rgb(255, 207, 207);
-    color: rgb(239, 68, 68);
-    border: 1px solid rgb(239, 68, 68);
+    background-color: rgb(207, 234, 240);
+    color: rgb(64, 131, 146);
+    border: 1px solid rgb(64, 131, 146);
     border-radius: 5px;
 }
 
