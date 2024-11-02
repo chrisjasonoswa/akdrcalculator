@@ -11,6 +11,7 @@ const refreshButton = document.getElementById("refresh-button");
 const refreshButtonContent = document.getElementById("refresh-button-content");
 
 const addressInput = document.getElementById("address-input");
+const addressRank = document.getElementById("address-rank");
 const addressPoints = document.getElementById("address-points");
 const addressAkdr = document.getElementById("address-akdr");
 
@@ -78,7 +79,6 @@ refreshButton.addEventListener("click", function(){
 
 //When points input is changed, recalculate akdr
 pointsInput.addEventListener("input", function() {
-    console.log("Points changed, recalculating AKDR");
     calculcatedAkdr();
 });
 
@@ -101,14 +101,11 @@ editAddrButton.addEventListener("click", () => {
 
 //Function to calculate Estimated AKDR
 function calculcatedAkdr(){
-    console.log(`Calculating AKDR: ${pointsInput.value} - ${pointsMultiplier}`);
     if(pointsInput.value && pointsMultiplier){
-        console.log("Calculating AKDR...");
         estimatedAkdr.innerText = (pointsMultiplier*pointsInput.value).toFixed(4);
     }
         
     else{
-        console.log("Not Calculating AKDR...");
         estimatedAkdr.innerText = "-";
     }
         
@@ -116,7 +113,6 @@ function calculcatedAkdr(){
 
 //Function to calculate Estimated AKDR for the ronin address
 function calculcateAddressAkdr(){
-    console.log(`Calculating Ronin AKDR: ${pointsInput.value} - ${pointsMultiplier}`);
     if(addressPoints.innerText !=  "-" && pointsMultiplier)
         addressAkdr.innerText = (pointsMultiplier*addressPoints.innerText).toFixed(4);
     else
@@ -126,7 +122,6 @@ function calculcateAddressAkdr(){
 // Function to fetch leaderboard data based on selected date
 function fetchLeaderboardData() {
     resetValues();
-    console.log("Fetching leaderboard data for:" + selectElement.value);
     const pointsUrl = 'https://corsproxy.io/?' + encodeURIComponent(`https://kaidro.com/api/leaderboard/${selectElement.value}?limit=3000`);
 
     fetch(pointsUrl)
@@ -145,19 +140,17 @@ function fetchLeaderboardData() {
                 
                 //Get address and set points
                 let address = localStorage.getItem("roninAddress");
-                console.log(`${lowestRank}: ${entry.walletAddress}:${address}`);
                 if (address && entry.walletAddress.toLowerCase() === address.toLowerCase()){
                     addressFound = true;
                     addressPoints.innerText = entry.points;
-                    
-                    console.log("Address found");
+                    addressRank.innerText = "#" + lowestRank;
+
                     const invalidAddressDiv = document.getElementById("invalid-address-info");
                     invalidAddressDiv.style = "display: none";
                 }
             });
 
             if(!addressFound){
-                console.log("Address not found");
                 const invalidAddressDiv = document.getElementById("invalid-address-info");
                 invalidAddressDiv.style = "display: block";
             }
@@ -202,7 +195,7 @@ function fetchLeaderboardData() {
 function resetValues(){
     const loaders = document.getElementsByClassName("with-loader");
     for (const element of loaders) {
-        element.innerHTML = '<div class="loader"></div>';
+        element.innerText = '-';
     }
 
     //Reset pointsMultipler
@@ -211,7 +204,8 @@ function resetValues(){
     //Empty out the estimated akdr
     estimatedAkdr.innerText = '-';
 
-    //Reset address points and estimated akdr
+    //Reset address rank, points and estimated akdr
+    addressRank.innerText = '-';
     addressPoints.innerText = '-';
     addressAkdr.innerText = '-';
 }
