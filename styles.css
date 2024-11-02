@@ -162,5 +162,12 @@ label {
     margin-right: 10px;
 }
 #address-input:disabled {
-    color: white;
+    background-color: black !important;  /* Ensures background stays black */
+    color: white !important;             /* Keeps text color white */
+    -webkit-text-fill-color: white !important; /* Ensures text color stays white */
+    opacity: 1 !important;               /* Removes any default graying */
+}
+#address-input:disabled::placeholder {
+    color: #aaa !important;              /* Lighten placeholder for contrast */
+    opacity: 1 !important;               /* Make placeholder fully visible */
 }

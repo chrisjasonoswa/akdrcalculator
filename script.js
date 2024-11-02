@@ -67,13 +67,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Event listener to fetch data whenever the selected date changes
 selectElement.addEventListener("change", () => {
-    resetValues();
     fetchLeaderboardData();
 });
 
 //When refresh button is clicked, fetch new leaderboard data
 refreshButton.addEventListener("click", function(){
-    resetValues();
     fetchLeaderboardData();
 });
 
@@ -103,18 +101,26 @@ editAddrButton.addEventListener("click", () => {
 
 //Function to calculate Estimated AKDR
 function calculcatedAkdr(){
-    if(pointsInput.value && pointsMultiplier)
+    console.log(`Calculating AKDR: ${pointsInput.value} - ${pointsMultiplier}`);
+    if(pointsInput.value && pointsMultiplier){
+        console.log("Calculating AKDR...");
         estimatedAkdr.innerText = (pointsMultiplier*pointsInput.value).toFixed(4);
-    else
+    }
+        
+    else{
+        console.log("Not Calculating AKDR...");
         estimatedAkdr.innerText = "-";
+    }
+        
 }
 
 //Function to calculate Estimated AKDR for the ronin address
 function calculcateAddressAkdr(){
+    console.log(`Calculating Ronin AKDR: ${pointsInput.value} - ${pointsMultiplier}`);
     if(addressPoints.innerText !=  "-" && pointsMultiplier)
         addressAkdr.innerText = (pointsMultiplier*addressPoints.innerText).toFixed(4);
     else
-        estimatedAkdr.innerText = "-";
+        addressAkdr.innerText = "-";
 }
 
 // Function to fetch leaderboard data based on selected date
@@ -139,16 +145,19 @@ function fetchLeaderboardData() {
                 
                 //Get address and set points
                 let address = localStorage.getItem("roninAddress");
-                if (address && entry.walletAddress == address){
+                console.log(`${lowestRank}: ${entry.walletAddress}:${address}`);
+                if (address && entry.walletAddress.toLowerCase() === address.toLowerCase()){
                     addressFound = true;
-                    addressPoints.innerText = entry.points
-
+                    addressPoints.innerText = entry.points;
+                    
+                    console.log("Address found");
                     const invalidAddressDiv = document.getElementById("invalid-address-info");
                     invalidAddressDiv.style = "display: none";
                 }
             });
 
             if(!addressFound){
+                console.log("Address not found");
                 const invalidAddressDiv = document.getElementById("invalid-address-info");
                 invalidAddressDiv.style = "display: block";
             }
